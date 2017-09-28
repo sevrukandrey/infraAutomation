@@ -8,6 +8,12 @@ public class Application {
         if (text.isEmpty()) {
             return 0;
         }
-        return  text.split(" ").length;
+       String resultString = deleteAllSpecificSymbolsAndSpace(text);
+        return  resultString.split(" ").length;
+    }
+
+    private String deleteAllSpecificSymbolsAndSpace(String text) {
+        String newTxt = text.replaceAll("\\p{Punct}", "");
+        return newTxt.replaceAll("\\s+", " ").trim();
     }
 }

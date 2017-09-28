@@ -22,35 +22,31 @@ public class TextTest {
 
     @Test
     public void shouldReturnListWithCorrectSize() {
-        List<String> list = new ArrayList<>();
-        list.addAll(text.getTopWords(1, txt));
 
-        assertThat(list).hasSize(1);
+        assertThat(text.getTopWords(1)).hasSize(1);
     }
 
     @Test
     public void shouldReturnElementsInCorrectOrder() {
-        List<String> list = new ArrayList<>();
-        list.addAll(text.getTopWords(5, txt));
 
-        assertThat(list).containsSequence("Andrew", "a", "x", "y", "z");
+        assertThat(text.getTopWords(5)).containsSequence("Andrew", "a", "x", "y", "z");
     }
 
     @Test
     public void shouldReturnUniqueElements() {
-        assertThat(text.getTopWords(5, txt)).doesNotHaveDuplicates();
+        assertThat(text.getTopWords(5)).doesNotHaveDuplicates();
     }
 
     @Test
     public void shouldThrownExceptionIfTextIsNull() {
-        assertThatThrownBy(() -> text.getTopWords(1, null))
+        assertThatThrownBy(() -> new Text(null).getTopWords(1))
             .isInstanceOf(RuntimeException.class)
             .hasMessage("Text cant be null");
     }
 
     @Test
     public void shouldThrownExceptionIfCountLessThanZero() {
-        assertThatThrownBy(() -> text.getTopWords(-1, "sd"))
+        assertThatThrownBy(() -> text.getTopWords(-1))
             .isInstanceOf(RuntimeException.class)
             .hasMessage("count can not be < 0");
     }
@@ -59,7 +55,7 @@ public class TextTest {
     public void shouldReturnOnlyWordsForGetTopWords() {
         String txt = ".1. 2, 3! 4? |' [ ] s32 3 dda 2 a1 3f s123 !";
 
-        assertThat(text.getTopWords(10, txt)).doesNotContain(".", ",", "!", "1", "}", "[", "s");
+        assertThat(new Text(txt).getTopWords(1)).doesNotContain(".", ",", "!", "1", "}", "[");
 
     }
 
@@ -68,23 +64,23 @@ public class TextTest {
     public void shouldReturnAllWords() {
         Map<String, Integer> map;
 
-        map = text.getWordFrequencies(txt);
+        map = text.getWordFrequencies();
 
-        assertThat(map).hasSize(8);
+        assertThat(map).hasSize(5);
     }
 
     @Test
     public void shouldReturnValueMoreThanOne() {
         Map<String, Integer> map;
 
-        map = text.getWordFrequencies(txt);
+        map = text.getWordFrequencies();
 
-        assertThat(map.get("a")).isEqualTo(3);
+        assertThat(map.get("a")).isEqualTo(2);
     }
 
     @Test
     public void shouldThrownExceptionIfTextIsNullForGetWordFrequencies() {
-        assertThatThrownBy(() -> text.getWordFrequencies(null))
+        assertThatThrownBy(() -> new Text(null).getWordFrequencies())
             .isInstanceOf(RuntimeException.class)
             .hasMessage("Text cant be null");
     }
@@ -93,17 +89,17 @@ public class TextTest {
 
     @Test
     public void shouldReturnCorrectLenght() {
-        assertThat(text.getLengthInChars(txt)).isEqualTo(11);
+        assertThat(text.getLengthInChars()).isEqualTo(11);
     }
 
     @Test
     public void shouldReturnZeroIfTextDoesNotContainWords() {
-        assertThat(text.getLengthInChars("1,2,3")).isEqualTo(0);
+        assertThat(new Text("1 2 3").getLengthInChars()).isEqualTo(0);
     }
 
     @Test
     public void shouldThrownExceptionIfTextIsNullForGetLengthChars() {
-        assertThatThrownBy(() -> text.getWordFrequencies(null))
+        assertThatThrownBy(() -> new Text(null).getWordFrequencies())
             .isInstanceOf(RuntimeException.class)
             .hasMessage("Text cant be null");
     }

@@ -1,7 +1,7 @@
 package com.playtika.second.hw2;
 
 
-import com.playtika.second.lesson.Main;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,31 +12,31 @@ import static org.assertj.core.api.Assertions.*;
 
 public class ApplicationTest {
 
-    public Main implementation;
+    public Application application;
 
     @Before
     public void setUp() throws Exception {
-        implementation = new Main();
+        application = new Application();
     }
 
 
     @Test
     public void testIsSplitBySpace() {
-        int wordCount = implementation
+        int wordCount = application
                 .countOfWords("I have 5 dollars");
         assertThat(wordCount).isEqualTo(4);
     }
 
     @Test
     public void emptyTextHasNoWords() {
-        int wordCount = implementation
+        int wordCount = application
                 .countOfWords("");
         assertThat(wordCount).isEqualTo(0);
     }
 
     @Test
     public void shouldReturnExceptionIfTextNull() {
-        assertThatThrownBy(() -> implementation.countOfWords(null))
+        assertThatThrownBy(() -> application.countOfWords(null))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("text can`t be null");
 
@@ -44,12 +44,22 @@ public class ApplicationTest {
 
     @Test
     public void shouldCorrectSplitMultilineString() {
-        assertThat(implementation.countOfWords("First line "
+        assertThat(application.countOfWords("First line "
                 + "second line"))
                 .isEqualTo(4);
     }
 
+    @Test
+    public void shouldNotContainPunctuationMarks() {
+        String txt = ", . / & ? :";
+        assertThat(application.countOfWords(txt)).isEqualTo(0);
 
-    //perenos strok
-    //
+    }
+
+    @Test
+    public void shouldNotContainExtraSpaces() {
+        String txt = "  d  a";
+        assertThat(application.countOfWords(txt)).isEqualTo(2);
+    }
+
 }
