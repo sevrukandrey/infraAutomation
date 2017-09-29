@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 public class TextTest {
 
     Text text;
-    String txt = "x y z a Andrew a !";
+    String txt = "x y z a Andrew a A !";
 
     @Before
     public void setUp() throws Exception {
@@ -22,14 +22,12 @@ public class TextTest {
 
     @Test
     public void shouldReturnListWithCorrectSize() {
-
         assertThat(text.getTopWords(1)).hasSize(1);
     }
 
     @Test
     public void shouldReturnElementsInCorrectOrder() {
-
-        assertThat(text.getTopWords(5)).containsSequence("Andrew", "a", "x", "y", "z");
+        assertThat(text.getTopWords(5)).containsSequence("a", "andrew", "x", "y", "z");
     }
 
     @Test
@@ -45,10 +43,10 @@ public class TextTest {
     }
 
     @Test
-    public void shouldThrownExceptionIfCountLessThanZero() {
-        assertThatThrownBy(() -> text.getTopWords(-1))
+    public void shouldThrownExceptionIfCountZeroAndLess() {
+        assertThatThrownBy(() -> text.getTopWords(0))
             .isInstanceOf(RuntimeException.class)
-            .hasMessage("count can not be < 0");
+            .hasMessage("count can not be 0 or less");
     }
 
     @Test
@@ -56,26 +54,30 @@ public class TextTest {
         String txt = ".1. 2, 3! 4? |' [ ] s32 3 dda 2 a1 3f s123 !";
 
         assertThat(new Text(txt).getTopWords(1)).doesNotContain(".", ",", "!", "1", "}", "[");
-
-    }
-
-/**************************************************************************************************************************************************************/
-    @Test
-    public void shouldReturnAllWords() {
-        Map<String, Integer> map;
-
-        map = text.getWordFrequencies();
-
-        assertThat(map).hasSize(5);
     }
 
     @Test
-    public void shouldReturnValueMoreThanOne() {
-        Map<String, Integer> map;
+    public void shouldContainLowerCaseWordsOnly() {
 
-        map = text.getWordFrequencies();
+        assertThat(text.getTopWords(5)).doesNotContain("A");
+    }
 
-        assertThat(map.get("a")).isEqualTo(2);
+
+    /**************************************************************************************************************************************************************/
+
+    @Test
+    public void shouldCountWordFrequenciesForOnlyWords() {
+        String txt = ".1. 2, 3! 4? |' [ ]  3  2 a1   a!";
+        //Map<String,Integer> expected = new HashMap<>();
+        //expected.put("a",2);
+        //assertThat(new Text(txt).getWordFrequencies()).containsAllEntriesOf(expected);
+
+        assertThat(new Text(txt).getWordFrequencies()).doesNotContainKeys("!", ".", " ", "[", "|");
+    }
+
+    @Test
+    public void shouldContainLowerCaseWordsOnlyForGetWordFrequencies() {
+        assertThat(text.getWordFrequencies()).doesNotContainKeys("A");
     }
 
     @Test
@@ -85,17 +87,38 @@ public class TextTest {
             .hasMessage("Text cant be null");
     }
 
-/**************************************************************************************************************************************************************/
+    @Test
+    public void shouldReturnWordFrequenciesForText() {
+        assertThat(new Text("hello Hello").getWordFrequencies()).hasSize(1).containsValues(2);
+    }
+
+    @Test
+    public void shouldReturnEmptyMapForTextWithOnlySpaces() {
+        assertThat(new Text("             ").getWordFrequencies()).hasSize(0);
+    }
+
+    /**************************************************************************************************************************************************************/
 
     @Test
     public void shouldReturnCorrectLenght() {
-        assertThat(text.getLengthInChars()).isEqualTo(11);
+        assertThat(text.getLengthInChars()).isEqualTo(12);
     }
 
     @Test
     public void shouldReturnZeroIfTextDoesNotContainWords() {
         assertThat(new Text("1 2 3").getLengthInChars()).isEqualTo(0);
     }
+
+    @Test
+    public void shouldNotCountLengthOfSpecificSymbols() {
+        assertThat(new Text(". $,./{}%    !  ?").getLengthInChars()).isEqualTo(0);
+    }
+
+    @Test
+    public void shouldNotCountSpaces() {
+        assertThat(new Text("     ").getLengthInChars()).isEqualTo(0);
+    }
+
 
     @Test
     public void shouldThrownExceptionIfTextIsNullForGetLengthChars() {

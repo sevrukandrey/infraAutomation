@@ -22,11 +22,11 @@ public class Text {
 
     public List<String> getTopWords(int count) {
 
-        if (count < 0) {
-            throw new RuntimeException("count can not be < 0");
+        if (count <= 0) {
+            throw new RuntimeException("count can not be 0 or less");
         }
 
-        String newStr = deleteSpecSymbolsAndNumbersAndSpace(text);
+        String newStr = getOnlyWordsInlowerCase(text);
         Set<String> set = new TreeSet<>();
         StringTokenizer stringTokenizer = new StringTokenizer(newStr, " ");
 
@@ -43,7 +43,7 @@ public class Text {
 
     public Map<String, Integer> getWordFrequencies() {
 
-        String newStr = deleteSpecSymbolsAndNumbersAndSpace(text);
+        String newStr = getOnlyWordsInlowerCase(text);
 
         List<String> list = new ArrayList<>();
         Map<String, Integer> map = new HashMap<>();
@@ -63,7 +63,7 @@ public class Text {
     }
 
     public int getLengthInChars() {
-        String newStr = deleteSpecSymbolsAndNumbersAndSpace(text);
+        String newStr = getOnlyWordsInlowerCase(text);
 
         int length = 0;
 
@@ -83,10 +83,10 @@ public class Text {
     }
 
 
-    private String deleteSpecSymbolsAndNumbersAndSpace(String text) {
+    private String getOnlyWordsInlowerCase(String text) {
         String s1 = text.replaceAll("\\p{Punct}", "");
         String s2 = s1.replaceAll("\\p{Digit}", "");
         String s3 = s2.replaceAll("\\s+", " ");
-        return s3.trim();
+        return s3.trim().toLowerCase();
     }
 }
