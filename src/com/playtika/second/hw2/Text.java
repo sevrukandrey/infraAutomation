@@ -1,13 +1,10 @@
 package com.playtika.second.hw2;
 
-import com.google.common.base.CharMatcher;
+
 import com.google.common.collect.Iterables;
 import org.assertj.core.util.Lists;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
@@ -38,18 +35,14 @@ public class Text {
     }
 
     public Map<String, Integer> getWordFrequencies() {
-
+        Map<String, Integer> map = new HashMap<>();
         String newStr = getOnlyWordsInlowerCase(text);
 
-        List<String> list = new ArrayList<>();
-        Map<String, Integer> map = new HashMap<>();
-
-
-        StringTokenizer stringTokenizer = new StringTokenizer(newStr, " ");
-
-        while (stringTokenizer.hasMoreTokens()) {
-            list.add(stringTokenizer.nextToken());
+        if (newStr.isEmpty()) {
+            return map;
         }
+
+        List<String> list = new ArrayList<>(Arrays.asList(newStr.split(" ")));
 
         for (int i = 0; i < list.size(); i++) {
             map.put(list.get(i), Collections.frequency(list, list.get(i)));

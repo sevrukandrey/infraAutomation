@@ -12,6 +12,8 @@ ctrl alt l -- align code
 ctrl n  find class
 alt f7 find usage
 
+ctrl + shift + T --- create new Test class
+
 
 -------------------------
 

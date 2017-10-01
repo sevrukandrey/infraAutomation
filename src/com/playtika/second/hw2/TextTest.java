@@ -94,7 +94,7 @@ public class TextTest {
 
     @Test
     public void shouldReturnEmptyMapForTextWithOnlySpaces() {
-        assertThat(new Text("   ").getWordFrequencies()).hasSize(0);
+        assertThat(new Text("        ").getWordFrequencies()).hasSize(0);
     }
 
     /**************************************************************************************************************************************************************/
