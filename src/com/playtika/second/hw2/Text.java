@@ -27,13 +27,9 @@ public class Text {
         }
 
         String newStr = getOnlyWordsInlowerCase(text);
-        Set<String> set = new TreeSet<>();
-        StringTokenizer stringTokenizer = new StringTokenizer(newStr, " ");
 
-        while (stringTokenizer.hasMoreTokens()) {
-            set.add(stringTokenizer.nextToken());
+        Set<String> set = new TreeSet<>(Arrays.asList(newStr.split(" ")));
 
-        }
 
         Iterable<String> sd = Iterables.limit(set, count);
 
@@ -67,17 +63,11 @@ public class Text {
 
         int length = 0;
 
-        List<String> list = new ArrayList<>();
-        StringTokenizer stringTokenizer = new StringTokenizer(newStr, " ");
-
-        while (stringTokenizer.hasMoreTokens()) {
-            list.add(stringTokenizer.nextToken());
-        }
+        List<String> list = new ArrayList<>(Arrays.asList(newStr.split(" ")));
 
         for (String aList : list) {
             length += aList.length();
         }
-
 
         return length;
     }

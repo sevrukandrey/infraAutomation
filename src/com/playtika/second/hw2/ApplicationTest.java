@@ -1,18 +1,15 @@
 package com.playtika.second.hw2;
 
 
-
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
 
-// junit ---- runt test
-
 public class ApplicationTest {
 
-    public Application application;
+    Application application;
 
     @Before
     public void setUp() throws Exception {
@@ -44,7 +41,7 @@ public class ApplicationTest {
 
     @Test
     public void shouldCorrectSplitMultilineString() {
-        assertThat(application.countOfWords("First line "
+        assertThat(application.countOfWords("First line"+"\n"
                 + "second line"))
                 .isEqualTo(4);
     }
