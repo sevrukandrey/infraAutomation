@@ -75,7 +75,7 @@ public class MainTest {
 
 /******************************************************FILES*******************************************************/
 
-        File file = new File("text.txt");
+        File file = new File("defaultText.txt");
 
        System.out.println(file.exists());
        System.out.println(file.canRead());
@@ -85,6 +85,7 @@ public class MainTest {
 
 
            List<String> lines =  Files.readAllLines(file.toPath());
+           System.out.println(lines.size());
            for (String line : lines) {
                System.out.println(line);
            }
