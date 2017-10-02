@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 public class TextTest {
 
     Text text;
-    String txt = "x y z a Andrew a A !";
+    String txt = "! x y z a Andrew a A !";
 
     @Before
     public void setUp() throws Exception {
@@ -21,39 +21,23 @@ public class TextTest {
     }
 
     @Test
-    public void shouldReturnListWithCorrectSize() {
-        assertThat(text.getTopWords(1)).hasSize(1);
+    public void shouldReturnTopUniqueWordsOrderedAlphabetically() {
+        assertThat(text.getTopWords(5)).containsSequence("a", "andrew", "x", "y", "z").hasSize(5);
     }
 
-    @Test
-    public void shouldReturnElementsInCorrectOrder() {
-        assertThat(text.getTopWords(5)).containsSequence("a", "andrew", "x", "y", "z");
-    }
-
-    @Test
-    public void shouldReturnUniqueElements() {
-        assertThat(text.getTopWords(5)).doesNotHaveDuplicates();
-    }
-
-    @Test
-    public void shouldThrownExceptionIfTextIsNull() {
-        assertThatThrownBy(() -> new Text(null).getTopWords(1))
-            .isInstanceOf(RuntimeException.class)
-            .hasMessage("Text cant be null");
-    }
 
     @Test
     public void shouldThrownExceptionIfCountZeroAndLess() {
         assertThatThrownBy(() -> text.getTopWords(0))
-            .isInstanceOf(RuntimeException.class)
-            .hasMessage("count can not be 0 or less");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("returnedCountOfTopWords can not be 0 or less");
     }
 
     @Test
     public void shouldReturnOnlyWordsForGetTopWords() {
         String txt = ".1. 2, 3! 4? |' [ ] s32 3 dda 2 a1 3f s123 !";
 
-        assertThat(new Text(txt).getTopWords(1)).doesNotContain(".", ",", "!", "1", "}", "[");
+        assertThat(new Text(txt).getTopWords(1)).doesNotContain(".", ",", "!", "1", "}", "[", "4?", ".1.");
     }
 
     @Test
@@ -63,39 +47,55 @@ public class TextTest {
     }
 
 
+    @Test
+    public void shouldNotCountSpacesNewLinesTabsCarriageReturningForGetTopWords() {
+        assertThat(new Text("\n\t\r     ").getLengthInChars()).isEqualTo(0);
+    }
+
+
     /**************************************************************************************************************************************************************/
 
     @Test
     public void shouldCountWordFrequenciesForOnlyWords() {
-        String txt = ".1. 2, 3! 4? |' [ ]  3  2 a1   a!";
-        //Map<String,Integer> expected = new HashMap<>();
-        //expected.put("a",2);
-        //assertThat(new Text(txt).getWordFrequencies()).containsAllEntriesOf(expected);
+        String txt = ".1. 2, 3! 4? |' [ ]  3  2 a1   a! b b b v v ";
+        Map<String, Integer> expected = new HashMap<>();
+        expected.put("a", 2);
+        expected.put("b", 3);
+        expected.put("v", 2);
+        assertThat(new Text(txt).getWordFrequencies()).containsAllEntriesOf(expected);
 
-        assertThat(new Text(txt).getWordFrequencies()).doesNotContainKeys("!", ".", " ", "[", "|");
     }
 
     @Test
     public void shouldContainLowerCaseWordsOnlyForGetWordFrequencies() {
-        assertThat(text.getWordFrequencies()).doesNotContainKeys("A");
+        String txt = "!a Abc aDc adF";
+
+        assertThat(new Text(txt).getWordFrequencies()).containsOnly(
+            entry("a", 1),
+            entry("abc", 1),
+            entry("adc", 1),
+            entry("adf", 1));
     }
 
-    @Test
-    public void shouldThrownExceptionIfTextIsNullForGetWordFrequencies() {
-        assertThatThrownBy(() -> new Text(null).getWordFrequencies())
-            .isInstanceOf(RuntimeException.class)
-            .hasMessage("Text cant be null");
-    }
 
     @Test
     public void shouldReturnWordFrequenciesForText() {
-        assertThat(new Text("hello Hello").getWordFrequencies()).hasSize(1).containsValues(2);
+        assertThat(new Text("hello Hello %hellO %").getWordFrequencies()).containsEntry("hello", 3);
     }
 
     @Test
     public void shouldReturnEmptyMapForTextWithOnlySpaces() {
-        assertThat(new Text("        ").getWordFrequencies()).hasSize(0);
+        Map<String, Integer> expected = new HashMap<>();
+        assertThat(new Text("        ").getWordFrequencies()).hasSize(expected.size());
     }
+
+    @Test
+    public void shouldNotCountSpacesNewLinesTabsCarriageReturningForGetWordFrequencies() {
+        Map<String, Integer> expected = new HashMap<>();
+
+        assertThat(new Text("\n\t\r     ").getWordFrequencies()).hasSize(expected.size());
+    }
+
 
     /**************************************************************************************************************************************************************/
 
@@ -104,25 +104,24 @@ public class TextTest {
         assertThat(text.getLengthInChars()).isEqualTo(12);
     }
 
+
     @Test
-    public void shouldReturnZeroIfTextDoesNotContainWords() {
-        assertThat(new Text("1 2 3").getLengthInChars()).isEqualTo(0);
+    public void shouldNotCountLengthOfSpecificSymbolsAndNumbers() {
+        assertThat(new Text(". $a,./{}%    !  ? 1 2 2? ").getLengthInChars()).isEqualTo(1);
     }
 
     @Test
-    public void shouldNotCountLengthOfSpecificSymbols() {
-        assertThat(new Text(". $,./{}%    !  ?").getLengthInChars()).isEqualTo(0);
-    }
-
-    @Test
-    public void shouldNotCountSpaces() {
-        assertThat(new Text("     ").getLengthInChars()).isEqualTo(0);
+    public void shouldNotCountSpacesNewLinesTabsCarriageReturningForGetLengthInChars() {
+        assertThat(new Text("\n\t\r     ").getLengthInChars()).isEqualTo(0);
     }
 
 
+    /**************************************************************************************************************************************************************/
+
+
     @Test
-    public void shouldThrownExceptionIfTextIsNullForGetLengthChars() {
-        assertThatThrownBy(() -> new Text(null).getWordFrequencies())
+    public void shouldThrownExceptionIfTextIsNull() {
+        assertThatThrownBy(() -> new Text(null).getTopWords(1))
             .isInstanceOf(RuntimeException.class)
             .hasMessage("Text cant be null");
     }

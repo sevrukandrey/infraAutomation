@@ -9,7 +9,7 @@ import java.util.*;
 import static java.util.Objects.requireNonNull;
 
 public class Text {
-    public final String text;
+    private final String text;
 
     public Text(String text) {
         requireNonNull(text, "Text cant be null");
@@ -17,48 +17,50 @@ public class Text {
     }
 
 
-    public List<String> getTopWords(int count) {
+    public List<String> getTopWords(int returnedCountOfTopWords) {
 
-        if (count <= 0) {
-            throw new RuntimeException("count can not be 0 or less");
+        if (returnedCountOfTopWords <= 0) {
+            throw new IllegalArgumentException("returnedCountOfTopWords can not be 0 or less");
         }
 
-        String newStr = getOnlyWordsInlowerCase(text);
+        String cleanedText = getOnlyWordsInlowerCase(text);
 
-        Set<String> set = new TreeSet<>(Arrays.asList(newStr.split(" ")));
+        Set<String> words = new TreeSet<>(Arrays.asList(cleanedText.split(" ")));
 
-
-        Iterable<String> sd = Iterables.limit(set, count);
-
-        return Lists.newArrayList(sd);
+        return new ArrayList<>(words).subList(0, returnedCountOfTopWords);
 
     }
 
     public Map<String, Integer> getWordFrequencies() {
-        Map<String, Integer> map = new HashMap<>();
-        String newStr = getOnlyWordsInlowerCase(text);
+        Map<String, Integer> frequencies = new HashMap<>();
+        String cleanedText = getOnlyWordsInlowerCase(text);
 
-        if (newStr.isEmpty()) {
-            return map;
+        if (cleanedText.isEmpty()) {
+            return frequencies;
         }
 
-        List<String> list = new ArrayList<>(Arrays.asList(newStr.split(" ")));
+        List<String> words = Arrays.asList(cleanedText.split(" "));
 
-        for (int i = 0; i < list.size(); i++) {
-            map.put(list.get(i), Collections.frequency(list, list.get(i)));
+        for (String word : words) {
+            if (frequencies.containsKey(word)) {
+                int count = frequencies.get(word) + 1;
+                frequencies.put(word, count);
+            } else {
+                frequencies.put(word, 1);
+            }
         }
 
-        return map;
+        return frequencies;
     }
 
     public int getLengthInChars() {
-        String newStr = getOnlyWordsInlowerCase(text);
+        String cleanedText = getOnlyWordsInlowerCase(text);
 
         int length = 0;
 
-        List<String> list = new ArrayList<>(Arrays.asList(newStr.split(" ")));
+        List<String> words = Arrays.asList(cleanedText.split(" "));
 
-        for (String aList : list) {
+        for (String aList : words) {
             length += aList.length();
         }
 

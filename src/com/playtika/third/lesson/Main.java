@@ -9,6 +9,8 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) {
 
+        String s = "asd\n\r\t";
+        System.out.println(s.length());
     }
 
     public static Map<String, Integer> getFrequencies(String text) {
