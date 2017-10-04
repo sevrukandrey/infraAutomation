@@ -75,10 +75,11 @@ public class MainTest {
 
 /******************************************************FILES*******************************************************/
 
-        File file = new File("defaultText.txt");
+        File file = new File("File1.txt");
 
        System.out.println(file.exists());
        System.out.println(file.canRead());
+     //  file.
 
        try {
            Reader reader = new InputStreamReader(new FileInputStream(file));

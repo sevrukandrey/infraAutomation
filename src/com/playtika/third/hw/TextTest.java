@@ -1,24 +1,26 @@
 package com.playtika.third.hw;
 
+import com.playtika.second.hw2.Text;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
+
+
+
+//Rewrite According to hamcrest asserts
 
 public class TextTest {
 
     Text text;
-    String txt = getDefaultText();
-
-    public TextTest() throws IOException {
-    }
+    String txt = "! x y z a Andrew a A !";
 
     @Before
     public void setUp() throws Exception {
@@ -27,155 +29,94 @@ public class TextTest {
 
     @Test
     public void shouldReturnTopUniqueWordsOrderedAlphabetically() {
-        assertThat(text.getTopWords(5)).containsSequence("a", "andrew", "x", "y", "z").hasSize(5);
+
+        assertThat((text.getTopWords(5)), contains("a", "andrew", "x", "y", "z"));
     }
 
-
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrownExceptionIfCountZeroAndLess() {
-        assertThatThrownBy(() -> text.getTopWords(0))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("returnedCountOfTopWords can not be 0 or less");
+        text.getTopWords(0);
+
     }
 
     @Test
     public void shouldReturnOnlyWordsForGetTopWords() {
-        String txt = null;
-        try {
-            txt = getSpecificElements();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String txt = ".1. 2, 3! 4? |' [ ] s32 3 dda 2 a1 3f s123 !";
 
-        assertThat(new Text(txt).getTopWords(100)).doesNotContain(".", ",", "!", "1", "}", "[", "4?", ".1.");
+        assertThat(new Text(txt).getTopWords(1), not(hasItems(".", "!", "@", "<", "1", "&")));
     }
 
     @Test
     public void shouldContainLowerCaseWordsOnly() {
-
-        assertThat(text.getTopWords(5)).doesNotContain("A");
+        assertThat(text.getTopWords(5), not(hasItem("A")));
     }
 
     @Test
     public void shouldNotCountSpacesNewLinesTabsCarriageReturningForGetTopWords() {
-
-        String txt = null;
-        try {
-            txt = getSpecificElements();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assertThat(new Text(txt).getLengthInChars()).isEqualTo(7);
+        assertThat(new Text("\n\t\r     ").getLengthInChars(), equalTo(0));
     }
-
-
-    /**************************************************************************************************************************************************************/
 
     @Test
     public void shouldCountWordFrequenciesForOnlyWords() {
-        String txt = null;
-        try {
-            txt = getSpecificSymbolsNumbersAndWords();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String txt = ".1. 2, 3! 4? |' [ ]  3  2 a1   a! b b b v v ";
         Map<String, Integer> expected = new HashMap<>();
         expected.put("a", 2);
         expected.put("b", 3);
         expected.put("v", 2);
-        assertThat(new Text(txt).getWordFrequencies()).containsAllEntriesOf(expected);
+        assertThat(new Text(txt).getWordFrequencies(), is(expected));
 
     }
 
     @Test
     public void shouldContainLowerCaseWordsOnlyForGetWordFrequencies() {
-        String txt = null;
-        try {
-            txt = getWordsInDifferentCase();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String txt = "!a Abc aDc adF";
+        Map<String, Integer> expected = new HashMap<>();
+        expected.put("a", 1);
+        expected.put("abc", 1);
+        expected.put("adc", 1);
+        expected.put("adf", 1);
 
-        assertThat(new Text(txt).getWordFrequencies()).containsOnly(
-                entry("abc", 4));
+        assertThat(new Text(txt).getWordFrequencies(), is(expected));
+    }
+
+    @Test
+    public void shouldReturnWordFrequenciesForText() {
+        Map<String, Integer> expected = new HashMap<>();
+        expected.put("hello", 3);
+        assertThat(new Text("hello Hello %hellO %").getWordFrequencies(), is(expected));
+
     }
 
     @Test
     public void shouldReturnEmptyMapForTextWithOnlySpaces() {
-        String txt = null;
-        try {
-            txt = getEmptyText();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         Map<String, Integer> expected = new HashMap<>();
-        assertThat(new Text(txt).getWordFrequencies()).hasSize(expected.size());
+        assertThat(new Text("        ").getWordFrequencies(), is(expected));
     }
 
     @Test
     public void shouldNotCountSpacesNewLinesTabsCarriageReturningForGetWordFrequencies() {
-        String txt = null;
-        try {
-            txt = getSpecificSymbolsNumbersAndWords();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Map<String, Integer> expected = new HashMap<>();
 
-        assertThat(new Text(txt).getWordFrequencies()).containsExactly(entry("a", 2), entry("b", 3), entry("v", 2));
+        assertThat(new Text("\n\t\r     ").getWordFrequencies(), is(expected));
     }
-
-
-    /**************************************************************************************************************************************************************/
 
     @Test
     public void shouldReturnCorrectLenght() {
-        assertThat(text.getLengthInChars()).isEqualTo(12);
+        assertThat(text.getLengthInChars(), equalTo(12));
     }
-
 
     @Test
     public void shouldNotCountLengthOfSpecificSymbolsAndNumbers() {
-        assertThat(new Text(". $a,./{}%    !  ? 1 2 2? ").getLengthInChars()).isEqualTo(1);
+        assertThat(new Text(". $a,./{}%    !  ? 1 2 2? ").getLengthInChars(), equalTo(1));
     }
 
     @Test
     public void shouldNotCountSpacesNewLinesTabsCarriageReturningForGetLengthInChars() {
-        assertThat(new Text("\n\t\r     ").getLengthInChars()).isEqualTo(0);
+        assertThat(new Text("\n\t\r     ").getLengthInChars(), equalTo(0));
     }
 
-
-    /**************************************************************************************************************************************************************/
-
-
-    @Test
+    @Test(expected = RuntimeException.class)
     public void shouldThrownExceptionIfTextIsNull() {
-        assertThatThrownBy(() -> new Text(null).getTopWords(1))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Text cant be null");
+        new Text(null).getTopWords(1);
     }
-
-    private String getSpecificElements() throws IOException {
-        return new String(Files.readAllBytes(Paths.get("SpecificSymbolsSpacesNumbersNewLinesTabs.txt")),
-                StandardCharsets.UTF_8);
-    }
-
-    private static String getDefaultText() throws IOException {
-        return new String(Files.readAllBytes(Paths.get("defaultText.txt")), StandardCharsets.UTF_8);
-    }
-
-    private String getSpecificSymbolsNumbersAndWords() throws IOException {
-        return new String(Files.readAllBytes(Paths.get("specificSymbolsNumbersAndWords.txt")), StandardCharsets.UTF_8);
-    }
-
-    private String getWordsInDifferentCase() throws IOException {
-        return new String(Files.readAllBytes(Paths.get("differentCase.txt")), StandardCharsets.UTF_8);
-    }
-
-
-    private String getEmptyText() throws IOException {
-
-        return new String(Files.readAllBytes(Paths.get("emptyFile.txt")), StandardCharsets.UTF_8);
-    }
-
-
 }
