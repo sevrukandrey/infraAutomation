@@ -1,16 +1,14 @@
 package com.playtika.third.hw;
 
 import com.playtika.second.hw2.Text;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 
 

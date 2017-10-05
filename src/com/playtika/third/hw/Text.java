@@ -1,21 +1,12 @@
 package com.playtika.third.hw;
 
 
-    import org.junit.Test;
+    import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    import java.io.*;
-    import java.nio.charset.StandardCharsets;
-    import java.nio.file.Files;
-    import java.nio.file.Path;
-    import java.nio.file.Paths;
-    import java.nio.file.attribute.BasicFileAttributeView;
-    import java.nio.file.attribute.BasicFileAttributes;
-    import java.util.*;
-    import java.util.concurrent.TimeUnit;
-
-    import static java.nio.file.Files.*;
-    import static java.nio.file.Paths.*;
-    import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNull;
 
 public class Text {
 

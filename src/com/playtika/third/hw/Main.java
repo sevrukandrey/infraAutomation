@@ -3,7 +3,6 @@ package com.playtika.third.hw;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,14 +12,14 @@ public class Main {
 
 
         File folder = new File("Files");
-        File[] listOfFiles = folder.listFiles();
+        File[] filesFromFolder = folder.listFiles();
         Map<String, Integer> resultMap = new HashMap<>();
 
 
-        for (File listOfFile : listOfFiles) {
-            printInformationAboutFiles(listOfFile);
-            String file = new String(Files.readAllBytes(Paths.get(listOfFile.getPath())), StandardCharsets.UTF_8);
-            HashMap<String, Integer> wordsFromFile = new HashMap<>(new Text(file).getWordFrequencies());
+        for (File file : filesFromFolder) {
+            printInformationAboutFiles(file);
+            String testFromFile = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+            Map<String, Integer> wordsFromFile = new Text(testFromFile).getWordFrequencies();
             totalWordsFreq(resultMap, wordsFromFile);
         }
 
@@ -31,7 +30,7 @@ public class Main {
         copyFile(file1, file2);
     }
 
-    private static void totalWordsFreq(Map<String, Integer> resultMap, HashMap<String, Integer> wordsFromFile) {
+    private static void totalWordsFreq(Map<String, Integer> resultMap, Map<String, Integer> wordsFromFile) {
         for (Map.Entry<String, Integer> entry : wordsFromFile.entrySet()) {
             Integer currentWordFreq = resultMap.get(entry.getKey());
             if (currentWordFreq != null) {
@@ -46,20 +45,20 @@ public class Main {
 
     private static void printInformationAboutFiles(File file) throws IOException {
         BasicFileAttributes attr1 = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-        System.out.println("File path : " + file.getPath() + " File total space : " + file.getTotalSpace() + "  file creation time : " + attr1.creationTime());
+        System.out.printf("File path : %s, File total space %s, File creation time %s \n", file.getPath(), file.getTotalSpace(), attr1.creationTime());
     }
 
     private static void copyFile(File fromFile, File toFile) throws IOException {
 
 
-        try (InputStream inputStream = new FileInputStream(fromFile);
-             OutputStream outputStream = new FileOutputStream(toFile);) {
+        try (InputStream in = new FileInputStream(fromFile);
+             OutputStream out = new FileOutputStream(toFile);) {
 
             byte[] buffer = new byte[1024];
 
             int lineLength;
-            while ((lineLength = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, lineLength);
+            while ((lineLength = in.read(buffer)) > 0) {
+                out.write(buffer, 0, lineLength);
             }
         }
 
