@@ -1,1 +1,1 @@
-! x y z a Andrew a A !
+x y x
