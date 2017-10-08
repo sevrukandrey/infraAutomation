@@ -7,7 +7,7 @@ ctrl+o ---- override
 
 ctrl alt m -- create method
 ctrl + F12 -- class methods
-ctrl alt t -- surraund with
+ctrl alt t -- surround with
 ctrl alt l -- align code
 ctrl n  find class
 alt f7 find usage

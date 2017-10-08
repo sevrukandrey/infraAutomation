@@ -10,8 +10,8 @@ import static org.assertj.core.api.Assertions.*;
 
 public class TextTest {
 
-    Text text;
-    String txt = "! x y z a Andrew a A !";
+    private Text text;
+    private String txt = "! x y z a Andrew a A !";
 
     @Before
     public void setUp() throws Exception {

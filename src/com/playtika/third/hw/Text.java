@@ -8,17 +8,18 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class Text {
+class Text {
+
 
 
     private final String text;
 
-    public Text(String text) {
+    Text(String text) {
         requireNonNull(text, "Text cant be null");
         this.text = text;
     }
 
-    public Map<String, Integer> getWordFrequencies() {
+    Map<String, Integer> getWordFrequencies() {
         Map<String, Integer> frequencies = new HashMap<>();
         String cleanedText = getOnlyWordsInlowerCase(text);
 
