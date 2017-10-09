@@ -4,7 +4,9 @@ package com.playtika.fourth.hw;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.*;
@@ -49,15 +51,7 @@ public class PersonTest {
         assertThat(p.countOfDaves(persons)).isEqualTo(1);
     }
 
-    @Test
-    public void shouldSplitByAge() {
-        Person p = new Person();
-        List<Person> persons = new ArrayList<>();
-        persons.add(new Person("Andrey", 100, "b"));
-        persons.add(new Person("Bory", 100, "b"));
-        persons.add(new Person("Vasya", 12, "b"));
-        assertThat(p.getPersonByAge(persons)).isEqualTo(1);
-    }
+
 
 
 }

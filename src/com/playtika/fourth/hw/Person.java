@@ -3,10 +3,14 @@ package com.playtika.fourth.hw;
 import java.util.*;
 import java.util.stream.Collectors;
 
-class Person {
+public class Person  {
+
     private String name;
-    private int age;
+    private double age;
     private String city;
+
+    Person() {
+    }
 
     Person(String name, int age, String city) {
         this.name = name;
@@ -14,8 +18,59 @@ class Person {
         this.city = city;
     }
 
-    Person() {
+    double getAverageAges(List<Person> persons) {
+        return persons.stream()
+            .filter(Objects::nonNull)
+            .mapToDouble(Person::getAge)
+            .average()
+            .getAsDouble();
     }
+
+    Optional<Person> getOldestPerson(List<Person> persons) {
+        return persons
+            .stream()
+            .filter(Objects::nonNull)
+            .max(Comparator.comparing(Person::getAge));
+    }
+
+    long countOfDaves(List<Person> persons) {
+        return persons.stream()
+            .filter(Objects::nonNull)
+            .filter(p -> p.getName().equals("Dave"))
+            .count();
+    }
+
+    Map<Double, List<Person>> getPersonByAge(List<Person> persons) {
+        return persons
+            .stream()
+            .filter(Objects::nonNull)
+            .collect(Collectors.groupingBy(Person::getAge));
+    }
+
+    String getCityWithLargePopulation(List<Person> persons) {
+        return persons
+            .stream()
+            .filter(p -> p.getCity() != null)
+            .collect(
+                Collectors.groupingBy(
+                    Person::getCity,
+                    Collectors.counting()
+                )
+            )
+            .entrySet()
+            .stream()
+            .max(Comparator.comparing(Map.Entry::getValue))
+            .get().getKey();
+    }
+
+    Map<String, Double> averageAgeByCity(List<Person> person) {
+        return person.stream()
+            .filter(p -> p.getAge() > 18)
+            .collect(Collectors.groupingBy(
+                Person::getCity,
+                Collectors.averagingDouble(Person::getAge)));
+    }
+
 
     public String getName() {
         return name;
@@ -25,7 +80,7 @@ class Person {
         this.name = name;
     }
 
-    public int getAge() {
+    public double getAge() {
         return age;
     }
 
@@ -41,81 +96,12 @@ class Person {
         this.city = city;
     }
 
-
     @Override
     public String toString() {
         return "Person{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                ", city='" + city + '\'' +
-                '}';
+            "name='" + name + '\'' +
+            ", age=" + age +
+            ", city='" + city + '\'' +
+            '}';
     }
-
-    double getAverageAges(List<Person> persons) {
-        return persons.stream()
-                .filter(Objects::nonNull)
-                .mapToDouble(p -> p.age)
-                .average()
-                .getAsDouble();
-    }
-
-    Optional<Person> getOldestPerson(List<Person> persons) {
-        return persons.stream()
-                .filter(Objects::nonNull)
-                .max(Comparator.comparing(Person::getAge));
-    }
-
-    long countOfDaves(List<Person> persons) {
-        return persons.stream()
-                .filter(Objects::nonNull)
-                .filter(p -> p.getName().equals("Dave"))
-                .count();
-    }
-
-    Map<Integer, List<Person>> getPersonByAge(List<Person> persons) {
-        return persons
-                .stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.groupingBy(Person::getAge));
-    }
-
-    public static void main(String[] args) {
-        Person p = new Person();
-        List<Person> persons = new ArrayList<>();
-        persons.add(new Person("andrey", 20, "borispol"));
-        persons.add(new Person("andrey", 18, "borispol"));
-        persons.add(new Person("katja", 30, "becyk"));
-        persons.add(new Person("sveta", 102, "kiev"));
-        persons.add(new Person("sveta", 150, "kiev"));
-        Map<String, Double> averageAgeByCity = p.averageAgeByCity(persons);
-        for (Map.Entry<String, Double> stringListEntry : averageAgeByCity.entrySet()) {
-            System.out.println(stringListEntry);
-        }
-
-        String str = p.getCityWithLargePopulation(persons);
-        System.out.println(str);
-    }
-
-    String getCityWithLargePopulation(List<Person> persons) {
-         return persons.stream()
-                 .collect(
-                         Collectors.groupingBy(
-                        Person::getCity,
-                        Collectors.counting()
-                        )
-                )
-                 .entrySet()
-                 .stream()
-                 .max(Comparator.comparing(entry -> entry.getKey()))
-                 .get().getKey();
-    }
-
-    Map<String, Double> averageAgeByCity(List<Person> person) {
-        return person.stream()
-                .filter(p -> p.age > 18)
-                .collect(Collectors.groupingBy(
-                        Person::getCity,
-                        Collectors.averagingDouble(Person::getAge)));
-    }
-
 }
