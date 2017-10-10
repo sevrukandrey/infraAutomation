@@ -3,7 +3,9 @@ package com.playtika.fourth.hw;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Person  {
+import static java.util.Comparator.*;
+
+public class Person {
 
     private String name;
     private double age;
@@ -30,7 +32,7 @@ public class Person  {
         return persons
             .stream()
             .filter(Objects::nonNull)
-            .max(Comparator.comparing(Person::getAge));
+            .max(comparing(Person::getAge));
     }
 
     long countOfDaves(List<Person> persons) {
@@ -59,7 +61,7 @@ public class Person  {
             )
             .entrySet()
             .stream()
-            .max(Comparator.comparing(Map.Entry::getValue))
+            .max(comparing(Map.Entry::getValue))
             .get().getKey();
     }
 
