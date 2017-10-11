@@ -11,9 +11,6 @@ public class Person {
     private double age;
     private String city;
 
-    Person() {
-    }
-
     Person(String name, int age, String city) {
         this.name = name;
         this.age = age;
@@ -52,6 +49,7 @@ public class Person {
     String getCityWithLargePopulation(List<Person> persons) {
         return persons
             .stream()
+            .filter(Objects::nonNull)
             .filter(p -> p.getCity() != null)
             .collect(
                 Collectors.groupingBy(
@@ -62,7 +60,7 @@ public class Person {
             .entrySet()
             .stream()
             .max(comparing(Map.Entry::getValue))
-            .get().getKey();
+            .map(Map.Entry::getKey).orElseThrow(()->new IllegalArgumentException("There is empty person list"));
     }
 
     Map<String, Double> averageAgeByCity(List<Person> person) {
@@ -72,7 +70,6 @@ public class Person {
                 Person::getCity,
                 Collectors.averagingDouble(Person::getAge)));
     }
-
 
     public String getName() {
         return name;
