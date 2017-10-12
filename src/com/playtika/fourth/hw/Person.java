@@ -17,12 +17,11 @@ public class Person {
         this.city = city;
     }
 
-    double getAverageAges(List<Person> persons) {
+    OptionalDouble getAverageAges(List<Person> persons) {
         return persons.stream()
             .filter(Objects::nonNull)
             .mapToDouble(Person::getAge)
-            .average()
-            .getAsDouble();
+            .average();
     }
 
     Optional<Person> getOldestPerson(List<Person> persons) {
