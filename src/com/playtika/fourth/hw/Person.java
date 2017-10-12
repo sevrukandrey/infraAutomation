@@ -17,36 +17,36 @@ public class Person {
         this.city = city;
     }
 
-    OptionalDouble getAverageAges(List<Person> persons) {
-        return persons.stream()
+    static OptionalDouble getAverageAges(List<Person> people) {
+        return people.stream()
             .filter(Objects::nonNull)
             .mapToDouble(Person::getAge)
             .average();
     }
 
-    Optional<Person> getOldestPerson(List<Person> persons) {
-        return persons
+    static Optional<Person> getOldestPerson(List<Person> people) {
+        return people
             .stream()
             .filter(Objects::nonNull)
             .max(comparing(Person::getAge));
     }
 
-    long countOfDaves(List<Person> persons) {
-        return persons.stream()
+    static long countOfDaves(List<Person> people) {
+        return people.stream()
             .filter(Objects::nonNull)
             .filter(p -> p.getName().equals("Dave"))
             .count();
     }
 
-    Map<Double, List<Person>> getPersonByAge(List<Person> persons) {
-        return persons
+    static Map<Double, List<Person>> getPersonByAge(List<Person> people) {
+        return people
             .stream()
             .filter(Objects::nonNull)
             .collect(Collectors.groupingBy(Person::getAge));
     }
 
-    String getCityWithLargePopulation(List<Person> persons) {
-        return persons
+    static String getCityWithLargePopulation(List<Person> people) {
+        return people
             .stream()
             .filter(Objects::nonNull)
             .filter(p -> p.getCity() != null)
@@ -62,8 +62,8 @@ public class Person {
             .map(Map.Entry::getKey).orElseThrow(()->new IllegalArgumentException("There is empty person list"));
     }
 
-    Map<String, Double> averageAgeByCity(List<Person> person) {
-        return person.stream()
+    static Map<String, Double> averageAgeByCity(List<Person> people) {
+        return people.stream()
             .filter(p -> p.getAge() > 18)
             .collect(Collectors.groupingBy(
                 Person::getCity,

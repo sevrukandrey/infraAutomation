@@ -33,7 +33,7 @@ class Text {
         String cleanedText = getOnlyWordsInlowerCase(text);
 
         if (cleanedText.isEmpty()) {
-            return new HashMap<>();
+            return Collections.emptyMap();
         }
 
         return Stream.of(cleanedText.split(" "))
